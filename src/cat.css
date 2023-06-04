@@ -1,0 +1,24 @@
+.loader {
+    display: none;
+    text-align: center;
+  }
+  
+  .error {
+    display: none;
+    color: red;
+    text-align: center;
+  }
+  
+  .cat-info {
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  /*.cat-image {
+    width: 400px;
+    height: auto;
+    margin-bottom: 10px;
+  }*/
+  

@@ -1,28 +1,88 @@
-import { fetchCatByBreed } from './cat-api.js';
+// index.js
 
-// Отримання значення вибраної опції зі селекту
-const selectElement = document.querySelector('.breed-select');
-selectElement.addEventListener('change', (event) => {
-  const selectedBreedId = event.target.value;
+import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 
-  fetchCatByBreed(selectedBreedId)
-    .then(cat => {
-      // Використати дані про кота тут
-      console.log(cat);
-      displayCatInfo(cat);
-    })
-    .catch(error => {
-      // Обробка помилки
-      console.error(error);
-    });
-});
+const breedSelect = document.querySelector('.breed-select');
+const loader = document.querySelector('.loader');
+const error = document.querySelector('.error');
+const catInfoContainer = document.querySelector('.cat-info');
+
+function populateBreedSelect(breeds) {
+  breeds.forEach(breed => {
+    const option = document.createElement('option');
+    option.value = breed.id;
+    option.textContent = breed.name;
+    breedSelect.appendChild(option);
+  });
+}
 
 function displayCatInfo(cat) {
-  const catInfoContainer = document.querySelector('.cat-info');
-  catInfoContainer.innerHTML = `
-    <img src="${cat[0].url}" alt="Cat Image">
-    <h2>${cat[0].breeds[0].name}</h2>
-    <p>Description: ${cat[0].breeds[0].description}</p>
-    <p>Temperament: ${cat[0].breeds[0].temperament}</p>
-  `;
+  const catImg = document.createElement('img');
+  catImg.src = cat[0].url;
+  catImg.alt = 'Cat Image';
+  catImg.width = 500;
+
+  
+  const catName = document.createElement('h2');
+  catName.textContent = cat[0].breeds[0].name;
+
+  const catDescription = document.createElement('p');
+  catDescription.textContent = `Description: ${cat[0].breeds[0].description}`;
+
+  const catTemperament = document.createElement('p');
+  catTemperament.textContent = `Temperament: ${cat[0].breeds[0].temperament}`;
+
+  catInfoContainer.innerHTML = '';
+  catInfoContainer.appendChild(catImg);
+  catInfoContainer.appendChild(catName);
+  catInfoContainer.appendChild(catDescription);
+  catInfoContainer.appendChild(catTemperament);
 }
+
+function showLoader() {
+  loader.style.display = 'block';
+}
+
+function hideLoader() {
+  loader.style.display = 'none';
+}
+
+function showError() {
+  error.style.display = 'block';
+}
+
+function hideError() {
+  error.style.display = 'none';
+}
+
+fetchBreeds()
+  .then(breeds => {
+    populateBreedSelect(breeds);
+  })
+  .catch(() => {
+    showError();
+  })
+  .finally(() => {
+    hideLoader();
+  });
+
+breedSelect.addEventListener('change', () => {
+  const selectedBreedId = breedSelect.value;
+
+  hideError();
+  showLoader();
+
+  fetchCatByBreed(selectedBreedId)
+    .then(cats => {
+      displayCatInfo(cats);
+    })
+    .catch(() => {
+      showError();
+    })
+    .finally(() => {
+      hideLoader();
+    });
+});
+const slimSelect = new SlimSelect({
+    select: breedSelect
+  });
