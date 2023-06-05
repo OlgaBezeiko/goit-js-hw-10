@@ -86,3 +86,5 @@ breedSelect.addEventListener('change', () => {
 const slimSelect = new SlimSelect({
     select: breedSelect
   });
+
+  
