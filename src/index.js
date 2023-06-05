@@ -12,6 +12,15 @@ const breedSelect = new SlimSelect({
   select: '#breed-select'
 });
 
+function populateBreedsSelect(breeds) {
+  breeds.forEach(breed => {
+    const option = document.createElement('option');
+    option.value = breed.id;
+    option.textContent = breed.name;
+    breedSelect.appendChild(option);
+  });
+}
+
 function displayCatInfo(cat) {
   const catImg = document.createElement('img');
   catImg.src = cat[0].url;
