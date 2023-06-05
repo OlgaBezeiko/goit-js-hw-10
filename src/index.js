@@ -1,5 +1,3 @@
-// index.js
-
 import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 import SlimSelect from 'slim-select';
 import Notiflix from 'notiflix';
@@ -8,9 +6,7 @@ const loader = document.querySelector('.loader');
 const error = document.querySelector('.error');
 const catInfoContainer = document.querySelector('.cat-info');
 
-const breedSelect = new SlimSelect({
-  select: '#breed-select'
-});
+let breedSelect; // Визначаємо змінну breedSelect
 
 function populateBreedsSelect(breeds) {
   breeds.forEach(breed => {
@@ -59,9 +55,29 @@ function hideError() {
   error.style.display = 'none';
 }
 
+breedSelect = new SlimSelect({
+  select: '#breed-select',
+  onChange: (selectedBreedId) => {
+    hideError();
+    showLoader();
+
+    fetchCatByBreed(selectedBreedId)
+      .then(cats => {
+        displayCatInfo(cats);
+      })
+      .catch(() => {
+        showError();
+        Notiflix.Notify.failure('Oops! Something went wrong. Please try again.');
+      })
+      .finally(() => {
+        hideLoader();
+      });
+  }
+});
+
 fetchBreeds()
   .then(breeds => {
-    populateBreedSelect(breeds);
+    populateBreedsSelect(breeds);
   })
   .catch(() => {
     showError();
@@ -70,22 +86,3 @@ fetchBreeds()
   .finally(() => {
     hideLoader();
   });
-
-breedSelect.slim.on('change', () => {
-  const selectedBreedId = breedSelect.selected();
-
-  hideError();
-  showLoader();
-
-  fetchCatByBreed(selectedBreedId)
-    .then(cats => {
-      displayCatInfo(cats);
-    })
-    .catch(() => {
-      showError();
-      Notiflix.Notify.failure('Oops! Something went wrong. Please try again.');
-    })
-    .finally(() => {
-      hideLoader();
-    });
-});
