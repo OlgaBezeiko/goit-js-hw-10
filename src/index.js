@@ -3,11 +3,13 @@ import SlimSelect from 'slim-select';
 import Notiflix from 'notiflix';
 import '/node_modules/slim-select/dist/slimselect.css';
 
+const selectRef = document.querySelector('#breed-select');
 const loader = document.querySelector('.loader');
 const error = document.querySelector('.error');
 const catInfoContainer = document.querySelector('.cat-info');
 
-let breedSelect; // Визначаємо змінну breedSelect
+let breedSelect; 
+
 
 function populateBreedsSelect(breeds) {
   const markup = breeds.map(breed => {
@@ -16,9 +18,10 @@ function populateBreedsSelect(breeds) {
     option.textContent = breed.name;
     return option;
   });
+
   selectRef.append(...markup);
   breedSelect = new SlimSelect({
-    select: '#breed-select'
+    select: '#breed-select',
   })
 }
 
