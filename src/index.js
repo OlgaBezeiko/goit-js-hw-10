@@ -1,6 +1,7 @@
 import { fetchBreeds, fetchCatByBreed } from './cat-api.js';
 import SlimSelect from 'slim-select';
 import Notiflix from 'notiflix';
+import '/node_modules/slim-select/dist/slimselect.css';
 
 const loader = document.querySelector('.loader');
 const error = document.querySelector('.error');
@@ -9,12 +10,16 @@ const catInfoContainer = document.querySelector('.cat-info');
 let breedSelect; // Визначаємо змінну breedSelect
 
 function populateBreedsSelect(breeds) {
-  breeds.forEach(breed => {
+  const markup = breeds.map(breed => {
     const option = document.createElement('option');
     option.value = breed.id;
     option.textContent = breed.name;
-    breedSelect.appendChild(option);
+    return option;
   });
+  selectRef.append(...markup);
+  breedSelect = new SlimSelect({
+    select: '#breed-select'
+  })
 }
 
 function displayCatInfo(cat) {
@@ -55,25 +60,25 @@ function hideError() {
   error.style.display = 'none';
 }
 
-breedSelect = new SlimSelect({
-  select: '#breed-select',
-  onChange: (selectedBreedId) => {
-    hideError();
-    showLoader();
+//breedSelect = new SlimSelect({
+  //select: '#breed-select',
+  //onChange: (selectedBreedId) => {
+    //hideError();
+    //showLoader();
 
-    fetchCatByBreed(selectedBreedId)
-      .then(cats => {
-        displayCatInfo(cats);
-      })
-      .catch(() => {
-        showError();
-        Notiflix.Notify.failure('Oops! Something went wrong. Please try again.');
-      })
-      .finally(() => {
-        hideLoader();
-      });
-  }
-});
+    //fetchCatByBreed(selectedBreedId)
+      //.then(cats => {
+        //displayCatInfo(cats);
+      //})
+      //.catch(() => {
+        //showError();
+        //Notiflix.Notify.failure('Oops! Something went wrong. Please try again.');
+     // })
+      //.finally(() => {
+       // hideLoader();
+      //});
+  //}
+//});
 
 fetchBreeds()
   .then(breeds => {
