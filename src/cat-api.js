@@ -43,8 +43,7 @@ const API_HEADERS = new Headers({
     'x-api-key' : API_KEY,
 });
 export function fetchBreeds(){
-    //    return fetch(`${API_URL}breeds`,{API_HEADERS})
-       return fetch(`${API_URL}breeds`,{method:"GET", headers:API_HEADERS})
+          return fetch(`${API_URL}breeds`,{method:"GET", headers:API_HEADERS})
         .then(response => {
             if (!response.ok) {
                 throw new Error(response.status);
@@ -61,8 +60,7 @@ export function fetchBreeds(){
 
     export function fetchCatByBreed(breedId){
         console.log(breedId);
-        // console.log(breedId);
-        return fetch(`${API_URL}images/search?breed_ids=${breedId}`, {method:"GET",headers:API_HEADERS}).then(req => 
+               return fetch(`${API_URL}images/search?breed_ids=${breedId}`, {method:"GET",headers:API_HEADERS}).then(req => 
             {if(!req.ok){
                 throw new Error(req.error);
             }
