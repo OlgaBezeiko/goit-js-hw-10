@@ -31,17 +31,16 @@ function createBreedsList(data){
     }
 
 function selectElHandler(event){
-    loaderEl.classList.remove("visually-hidden");
     const breedId = selectEl.value;
 
     if (breedId === " ") {
-
         return breedId;
     }
+    showLoader(); // Показати лоадер перед виконанням запиту
+
     fetchCatByBreed(breedId).then(data => {
         const catImgURL = data[0].url;
         const catBreedInfo = data[0].breeds[0];
-       
     
         const catInfoCode = `
     <div class="cat-info-box">
@@ -58,8 +57,13 @@ function selectElHandler(event){
         console.log(error);
         const e = error;
         Notiflix.Notify.failure(`Error: ${e}`);
+    }).finally(() => {
+        hideLoader(); // Приховати лоадер після завершення запиту
     });
-    setTimeout(hideLoader, 2500);
+}
+
+function showLoader() {
+    loaderEl.classList.remove("visually-hidden");
 }
 
 function hideLoader(){
